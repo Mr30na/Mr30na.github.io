@@ -6,24 +6,21 @@ let card = document.createElement("div");
 let countries = [];
 input.value = "";
 display.innerHTML = "loading...";
-sendRequest();
-button.addEventListener("click", () => {
-  displayinfo();
-});
-function sendRequest() {
-  let req = new XMLHttpRequest();
-  req.open("GET", "https://restcountries.com/v3.1/all");
-  req.send();
-  console.log("welcome");
-  req.addEventListener("readystatechange", () => {
-    if (req.readyState === 4 && req.status === 200) {
-      display.innerHTML = "";
-      countries = JSON.parse(req.response);
-
-      console.log(countries);
-    }
+sendRequest("https://restcountries.com/v3.1/all")
+  .then((data) => {
+    countries = data;
+    display.innerHTML = "";
+  })
+  .catch((err) => {
+    console.log(err);
   });
+
+async function sendRequest(path) {
+  const response = await fetch(path);
+  const data = await response.json();
+  return data;
 }
+
 function displayinfo() {
   let found = false;
   display.innerHTML = "";
